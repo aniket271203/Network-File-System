@@ -1,0 +1,25 @@
+1. REMOVE FSANITIZE=ADDRESS,NULL FROM MAKEFILE.
+2. LIST ALL FILES IN A DIRECTORY
+3. unlimited connections of SS and Client in listen()?
+
+ADDITIONAL (ONLY IF YOU HAVE ENOUGH TIME):
+1. Get public IP of storage server and send it to naming server (to extend implementation) -> getaddrinfo() part.
+2. Perhaps read/write/append messages larger than MSG_LEN (8192) bytes?
+3. Redundancy stuff copied over might still persist in those storage servers as backup even after everything is said and done. Maybe, encrypt that data or something?
+
+NM:
+1. For copy, ensure that the destination is DIRECTORY only (Maybe, demarcate directories with a / at the end while connecting?)
+
+Redundancy:
+1. Failure Detection: Implement connect timeout (on NM) -> if connect() times out, then check if any of the backups are alive (ONLY IF GETINFO OR READ!). If yes, send that backup IP and port.
+Else, tell the client that they are not allowed to perform *that* operation at this time.
+2. Data Redundancy and Replication: Use the first 2 storage servers as the backup. Replicate every one of the accessible paths onto them.
+3. SS Recovery: When SS comes back online (mark the SS as offline in a bool flag if connect() times out.) If you are able to connect to the SS again later, then copy data over from that SS to the backups
+again, and then process your request.
+4. Asynchronous Duplication: Basically, after write, client will send an ACK or something. Once this is received, fork() out and issue copy requests to SS0 and SS1 but don't wait for an ACK.
+
+LRU:
+1. Every time a write, append or delete is attempted, remove the item from the cache.
+
+SS:
+1. File too big to send for read. Fix it.

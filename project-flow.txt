@@ -1,0 +1,13 @@
+Naming Server:
+1. Has 1 dedicated thread just to accept connections from storage servers and populate it into an array.
+2. 2 ports -> 1 for clients, 1 for storage servers.
+3. Client CLI -> read ..., write ....
+
+Client - Server request flow:
+1. Client first connects to naming server on a pre-defined port.
+2. Client then binds to a free port, gets that port number and sends that port number to the server, asking the server to connect to the client via that port.
+3. Server creates a new thread, and connects to the client via that port.
+4. Client then sends the request that it wants to execute via that new port to the NM.
+5. NM/SS starts performing the operation, waits for operation to finish, and sends the output of the operation back to the client.
+6. After the operation is done, and client and NM/SS acknowledge that it is done (and receipt of data), this connection is killed.
+7. Client repeats 1-6 every time it wants to execute a new request.

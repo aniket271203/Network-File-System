@@ -1,0 +1,7 @@
+Spec-2 for clients:
+
+1. First, connect to the naming server. For every request the client sends to the naming server, it waits for an ACK back.
+
+To-Do:
+1. Add a way to check if the NM IP entered is valid.
+2. Maybe, pause Ctrl+C on client side until a request is done being processed.
